@@ -1,3 +1,4 @@
+import os
 import urllib
 import hashlib
 import hmac
@@ -112,8 +113,8 @@ class BinanceSpotGateway(BaseGateway):
     default_name: str = "BINANCE_SPOT"
 
     default_setting: Dict[str, Any] = {
-        "key": "",
-        "secret": "",
+        "key": "DEVTEST_BINANCE_ED25519_APIKEY",
+        "secret": "DEVTEST_BINANCE_ED25519_PEM",
         "服务器": ["REAL", "TESTNET"],
         "代理地址": "",
         "代理端口": 0
@@ -138,7 +139,13 @@ class BinanceSpotGateway(BaseGateway):
         proxy_host: str = setting["代理地址"]
         proxy_port: int = setting["代理端口"]
         server: str = setting["服务器"]
-
+        key = os.getenv(key)
+        secret = os.getenv(secret)
+        #read apikey from file
+        with open(key, 'r') as f:
+            key = f.read().strip()
+        with open(secret, 'r') as f:
+            secret = f.read().strip()
         self.rest_api.connect(key, secret, proxy_host, proxy_port, server)
         self.market_ws_api.connect(proxy_host, proxy_port, server)
 

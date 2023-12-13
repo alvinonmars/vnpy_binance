@@ -3,7 +3,7 @@
 2. 只支持单向持仓模式
 3. 只支持反向合约
 """
-
+import os
 import urllib
 import hashlib
 import hmac
@@ -120,8 +120,8 @@ class BinanceInverseGateway(BaseGateway):
     default_name: str = "BINANCE_INVERSE"
 
     default_setting: Dict[str, Any] = {
-        "key": "",
-        "secret": "",
+        "key": "DEVTEST_BINANCE_ED25519_APIKEY",
+        "secret": "DEVTEST_BINANCE_ED25519_PEM",
         "服务器": ["REAL", "TESTNET"],
         "代理地址": "",
         "代理端口": 0,
@@ -146,7 +146,13 @@ class BinanceInverseGateway(BaseGateway):
         server: str = setting["服务器"]
         proxy_host: int = setting["代理地址"]
         proxy_port: str = setting["代理端口"]
-
+        key = os.getenv(key)
+        secret = os.getenv(secret)
+        #read apikey from file
+        with open(key, 'r') as f:
+            key = f.read().strip()
+        with open(secret, 'r') as f:
+            secret = f.read().strip()
         self.rest_api.connect(key, secret, server, proxy_host, proxy_port)
         self.market_ws_api.connect(proxy_host, proxy_port, server)
 

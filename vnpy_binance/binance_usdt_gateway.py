@@ -3,7 +3,7 @@
 2. 只支持单向持仓模式
 3. 只支持正向合约
 """
-
+import os
 import urllib
 import hashlib
 import hmac
@@ -122,8 +122,8 @@ class BinanceUsdtGateway(BaseGateway):
     default_name: str = "BINANCE_USDT"
 
     default_setting: Dict[str, Any] = {
-        "key": "",
-        "secret": "",
+        "key": "DEVTEST_BINANCE_ED25519_APIKEY",
+        "secret": "DEVTEST_BINANCE_ED25519_PEM",
         "服务器": ["REAL", "TESTNET"],
         "代理地址": "",
         "代理端口": 0,
@@ -148,7 +148,13 @@ class BinanceUsdtGateway(BaseGateway):
         server: str = setting["服务器"]
         proxy_host: str = setting["代理地址"]
         proxy_port: int = setting["代理端口"]
-
+        key = os.getenv(key)
+        secret = os.getenv(secret)
+        #read apikey from file
+        with open(key, 'r') as f:
+            key = f.read().strip()
+        with open(secret, 'r') as f:
+            secret = f.read().strip()
         self.rest_api.connect(key, secret, server, proxy_host, proxy_port)
         self.market_ws_api.connect(proxy_host, proxy_port, server)
 
