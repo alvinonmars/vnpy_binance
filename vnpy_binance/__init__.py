@@ -25,7 +25,7 @@ import importlib_metadata
 from .binance_spot_gateway import BinanceSpotGateway
 from .binance_usdt_gateway import BinanceUsdtGateway
 from .binance_inverse_gateway import BinanceInverseGateway
-
+from .binance_spot_gateway_pro import BinanceSpotGatewayPro
 
 try:
     __version__ = importlib_metadata.version("vnpy_binance")
