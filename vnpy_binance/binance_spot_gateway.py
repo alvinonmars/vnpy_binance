@@ -142,10 +142,19 @@ class BinanceSpotGateway(BaseGateway):
         key = os.getenv(key)
         secret = os.getenv(secret)
         #read apikey from file
-        with open(key, 'r') as f:
-            key = f.read().strip()
-        with open(secret, 'r') as f:
-            secret = f.read().strip()
+        try:
+            key = os.getenv(key)
+            secret = os.getenv(secret)
+            #read apikey from file
+            with open(key, 'r') as f:
+                key = f.read().strip()
+            with open(secret, 'r') as f:
+                secret = f.read().strip()
+        except Exception as e:
+            self.write_log(f"读取apikey失败：{str(e)}")
+            key = setting["key"]
+            secret = setting["secret"]
+            
         self.rest_api.connect(key, secret, proxy_host, proxy_port, server)
         self.market_ws_api.connect(proxy_host, proxy_port, server)
 
